@@ -1,5 +1,10 @@
 const mongoose = require('../libs/mongoose');
+const pick = require('lodash/pick');
 
+const publicFields = ['email', 'displayName'];
+const userSchemaOptions = {
+  timestamps: true
+};
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -12,18 +17,19 @@ const userSchema = new mongoose.Schema({
         message: 'Некорректный email.'
       }
     ],
-    unique: 'Такой email уже существует',
-    lowercase: true,
-    trim: true
+    unique: 'Такой email уже существует'
   },
   displayName: {
     type: String,
     required: 'У пользователя должно быть имя',
     unique: 'Такое имя уже существует'
   }
-},
-{
-  timestamps: true
-});
+}, userSchemaOptions);
+
+userSchema.methods.serialize = function serializeUser() {
+  return pick(this, [...publicFields, '_id']);
+};
+
+userSchema.statics.publicFields = publicFields;
 
 module.exports = mongoose.model('User', userSchema);
