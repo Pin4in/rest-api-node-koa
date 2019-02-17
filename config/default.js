@@ -6,6 +6,7 @@ module.exports = {
   root: process.cwd(),
   templatesRoot: path.join(process.cwd(), 'templates'),
   mongodb: {
+    debug: true,
     uri: 'mongodb://localhost/users_app'
   }
 };
